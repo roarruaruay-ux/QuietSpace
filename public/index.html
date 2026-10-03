@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QuietSpace</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;700&family=Noto+Sans+Thai:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: เว็บหน้าเดียว 3 มุมมอง (ล็อบบี้ห้อง / สตูดิโออวตาร / ห้อง) ฉากหลัง 3D เป็นสีเขียวนุ่มตามธีม */
+:root{
+  --bg:#eef4ec; --surface:#fbfdfa; --ink:#14301f; --muted:#587061;
+  --accent:#2a8a4a; --accent-ink:#ffffff; --line:#d1e0d1; --soft:#dcebd9;
+  --stage-a:#d4ebd5; --stage-b:#9fcfa9; --warn:#a8481f;
+  --f-display:'Anuphan','Noto Sans Thai',system-ui,sans-serif;
+  --f-body:'Noto Sans Thai','Anuphan',system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0b1812; --surface:#12261b; --ink:#e3f1e6; --muted:#8caa97;
+    --accent:#5fcf86; --accent-ink:#06210f; --line:#223f2d; --soft:#193526;
+    --stage-a:#1a3d2d; --stage-b:#0f2a1e; --warn:#e69a72;
+    color-scheme:dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.65 var(--f-body);-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:var(--f-display);line-height:1.25;margin:0;text-wrap:balance}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted)}
+[hidden]{display:none!important}
+
+.top{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;gap:16px;
+  padding:12px max(16px,calc((100% - 1160px)/2));background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font:700 20px var(--f-display);color:var(--ink);text-decoration:none;letter-spacing:.01em;background:none;border:0;cursor:pointer;padding:0}
+.logo{height:34px;width:auto;max-width:100%;display:block}
+@media (prefers-color-scheme:dark){.brand{background:#eef6ef;border-radius:12px;padding:3px 10px}}
+nav{display:flex;gap:4px}
+.nav{background:none;border:0;padding:8px 14px;border-radius:99px;cursor:pointer;color:var(--muted);font-weight:500}
+.nav.on{background:var(--soft);color:var(--ink)}
+
+main{max-width:1160px;margin:0 auto;padding:28px 16px 64px}
+.eyebrow{font-size:13px;letter-spacing:.08em;color:var(--accent);font-weight:600;text-transform:uppercase}
+.hero{display:grid;gap:14px;max-width:640px;padding:12px 0 32px}
+.hero h1{font-size:clamp(30px,5vw,48px)}
+.lead{color:var(--muted);font-size:17px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:12px;padding:11px 20px;
+  background:var(--accent);color:var(--accent-ink);font-weight:600;cursor:pointer;transition:transform .12s,opacity .12s}
+.btn:hover{transform:translateY(-1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.btn.ghost{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--line)}
+.btn.sm{padding:7px 14px;font-size:14px;border-radius:10px}
+.btn.rec{background:var(--warn);color:#fff}
+
+.lobbygrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:28px;align-items:start}
+.lobbygrid h2{font-size:22px;margin-bottom:14px}
+.rooms{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.room{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.rtop{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.rtop h3{font-size:17px}
+.chip{font-size:12px;background:var(--soft);padding:2px 10px;border-radius:99px;white-space:nowrap;color:var(--muted)}
+.rbot{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:6px}
+.dots{display:flex}
+.dots i{width:18px;height:18px;border-radius:50%;border:2px solid var(--surface);margin-left:-6px}
+.dots i:first-child{margin-left:0}
+.cnt{font-size:13px;color:var(--muted);flex:1}
+.foot{font-size:13px;color:var(--muted);margin-top:14px}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:12px}
+.panel h2{font-size:19px;margin:0}
+label{font-size:14px;font-weight:500;display:grid;gap:5px}
+input[type=text],select{width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg)}
+input[type=text]:focus,select:focus{border-color:var(--accent);outline:none}
+
+.stage{position:relative;border-radius:18px;overflow:hidden;min-height:280px;aspect-ratio:16/10;
+  background:radial-gradient(120% 95% at 50% 15%,var(--stage-a),var(--stage-b))}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.labels{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.lbl{position:absolute;left:0;top:0;font-size:12px;line-height:1;padding:5px 9px;border-radius:99px;background:rgba(8,28,17,.62);color:#f2fbf3;white-space:nowrap}
+.lbl.me{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.nogl{position:absolute;inset:0;display:grid;place-items:center;padding:20px;text-align:center;color:var(--muted)}
+
+.studiogrid{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+.studiogrid .stage{aspect-ratio:4/5;cursor:grab;touch-action:pan-y}
+.studiogrid .stage:active{cursor:grabbing}
+.opt{display:grid;gap:8px}
+.opt>span{font-size:14px;font-weight:500}
+.sw{display:flex;gap:8px;flex-wrap:wrap}
+.sw button{width:34px;height:34px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 0 0 1.5px var(--line);cursor:pointer;padding:0}
+.sw button[aria-checked=true]{box-shadow:0 0 0 2.5px var(--accent)}
+.seg{display:flex;gap:6px;flex-wrap:wrap}
+.seg button{padding:7px 14px;border-radius:99px;border:1.5px solid var(--line);background:transparent;cursor:pointer;font-size:14px}
+.seg button[aria-checked=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.hint{font-size:13px;color:var(--muted)}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.danger{background:var(--warn);color:#fff;box-shadow:none}
+.net{font-size:12px;padding:4px 10px;border-radius:99px;background:var(--soft);color:var(--muted);align-self:center;margin-left:6px;white-space:nowrap}
+.net::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--muted);margin-right:6px}
+.net[data-s=on]{color:var(--ink)}
+.net[data-s=on]::before{background:var(--accent)}
+.net[data-s=off]::before{background:var(--warn)}
+.remotes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.rtile{position:relative;border-radius:10px;overflow:hidden;background:var(--soft);aspect-ratio:4/3}
+.rtile video{width:100%;height:100%;object-fit:cover;display:block}
+.rname{position:absolute;left:6px;bottom:6px;font-size:11px;padding:2px 7px;border-radius:99px;background:rgba(8,28,17,.62);color:#f2fbf3}
+#members li .mn{flex:1;min-width:0;overflow-wrap:anywhere}
+.st{font-size:11px;padding:1px 8px;border-radius:99px;background:var(--soft);color:var(--muted);text-decoration:line-through;flex:none}
+.st.on{background:var(--accent);color:var(--accent-ink);text-decoration:none}
+.empty{grid-column:1/-1;color:var(--muted);padding:18px 0}
+.bgl{position:absolute;inset:-24px;background-size:cover;background-position:center;pointer-events:none}
+.bgd{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none}
+.bgpanel{margin-top:12px;padding:14px}
+.bgpanel h3{font-size:15px;color:var(--muted);font-weight:600}
+.bgchips{display:flex;gap:8px;flex-wrap:wrap}
+.bgchips button{width:64px;height:44px;border-radius:10px;border:2px solid var(--line);cursor:pointer;padding:0;background-size:cover;background-position:center}
+.bgchips button[aria-checked=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.bgpanel input[type=range]{width:100%;accent-color:var(--accent)}
+.sndpanel{margin-top:12px;padding:14px;gap:14px}
+.sndpanel h3{font-size:15px;color:var(--muted);font-weight:600}
+.sndpanel input[type=range]{width:100%;accent-color:var(--accent)}
+.spresets{display:flex;gap:8px;flex-wrap:wrap}
+.sgroup+.sgroup{margin-top:6px}
+.sgroup h4{margin:10px 0 8px;font:600 13px var(--f-body);color:var(--muted);letter-spacing:.02em}
+.srows{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px 18px}
+.srow{display:flex;align-items:center;gap:10px;min-width:0}
+.stog{flex:none;width:128px;text-align:left;padding:7px 12px;border-radius:99px;border:1.5px solid var(--line);background:transparent;cursor:pointer;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.stog[aria-checked=true]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.srow input[type=range]{flex:1;min-width:0}
+.sx{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);background:transparent;cursor:pointer;line-height:1;font-size:16px}
+
+.roomhead{display:flex;align-items:center;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.roomhead h2{font-size:24px}
+.roomgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;align-items:start}
+.bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.timer{display:flex;align-items:center;gap:8px;margin-left:auto;font-variant-numeric:tabular-nums;color:var(--muted);font-size:14px}
+.timer b{font:700 20px var(--f-display);color:var(--ink);min-width:3.2ch}
+.side{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:12px;min-width:0}
+.side h3{font-size:15px;color:var(--muted);font-weight:600}
+.camtile{position:relative;border-radius:12px;overflow:hidden;background:var(--soft);aspect-ratio:4/3;display:grid;place-items:center}
+.camtile video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.camtile p{padding:12px;text-align:center;font-size:14px;color:var(--muted)}
+.mic{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.mic.on{color:var(--ink)}
+.meter{flex:1;height:8px;border-radius:99px;background:var(--soft);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .08s}
+#members{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#members li{display:flex;align-items:center;gap:10px;font-size:14px}
+#members i{width:14px;height:14px;border-radius:50%;flex:none}
+.chat{height:200px;overflow-y:auto;display:grid;align-content:start;gap:8px;padding:2px}
+.msg{font-size:14px;background:var(--bg);padding:7px 11px;border-radius:12px;overflow-wrap:anywhere}
+.msg b{font-weight:600;margin-right:6px}
+.msg time{font-size:11px;color:var(--muted);margin-left:6px}
+#chatForm{display:flex;gap:8px}
+#chatIn{flex:1;min-width:0}
+
+.toast{position:fixed;left:50%;bottom:max(20px,env(safe-area-inset-bottom,0px));transform:translateX(-50%);
+  background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:14px;z-index:30;max-width:calc(100% - 32px)}
+
+@media (max-width:900px){
+  .lobbygrid,.roomgrid,.studiogrid{grid-template-columns:minmax(0,1fr)}
+  .studiogrid .stage{aspect-ratio:1/1}
+}
+@media (max-width:520px){
+  .stage{aspect-ratio:4/3}
+  .timer{margin-left:0;width:100%}
+}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <button class="brand" data-go="lobby" aria-label="QuietSpace หน้าแรก"><img class="logo" alt="QuietSpace" width="165" height="34" src="logo.png"></button>
+  <nav>
+    <button class="nav on" data-go="lobby">ห้อง</button>
+    <button class="nav" data-go="studio">อวตารของฉัน</button>
+    <span class="net" id="net" data-s="wait" role="status">กำลังเชื่อมต่อ…</span>
+  </nav>
+</header>
+
+<main>
+  <!-- ล็อบบี้ -->
+  <section id="v-lobby">
+    <div class="hero">
+      <p class="eyebrow">พื้นที่ออนไลน์สำหรับอยู่เงียบๆ ด้วยกัน</p>
+      <h1>มีคนอยู่ข้างๆ โดยไม่ต้องพูดอะไรเลย</h1>
+      <p class="lead">เข้าห้องอ่านหนังสือ ทำงาน หรือนั่งเฉยๆ ในฐานะอวตาร 3D ของคุณ จะเปิดกล้องหรือไม่เปิดก็ได้ ไม่มีใครบังคับให้คุยหรือมองหน้า</p>
+      <div class="row">
+        <button class="btn" id="goCreate">สร้างห้องของฉัน</button>
+        <button class="btn ghost" data-go="studio">แต่งอวตาร</button>
+      </div>
+    </div>
+    <div class="lobbygrid">
+      <div>
+        <h2>ห้องที่เปิดอยู่</h2>
+        <div id="roomList" class="rooms"></div>
+        <p class="foot">ห้องและแชตใช้ร่วมกันกับทุกคนที่เปิดเว็บนี้ ผู้สร้างห้องเท่านั้นที่ลบห้องได้ แชตเก็บย้อนหลังล่าสุด 60 ข้อความ</p>
+      </div>
+      <form id="createForm" class="panel" autocomplete="off">
+        <h2>สร้างห้องใหม่</h2>
+        <label for="cName">ชื่อห้อง<input type="text" id="cName" maxlength="40" placeholder="เช่น อ่านสอบด้วยกัน" required></label>
+        <label for="cDesc">กติกาของห้อง<input type="text" id="cDesc" maxlength="80" placeholder="เช่น ไม่คุยกัน พิมพ์ได้เมื่อจำเป็น"></label>
+        <label for="cMood">บรรยากาศ
+          <select id="cMood"><option>เงียบมาก</option><option>คุยเบาๆ ได้</option><option>เสียงฝนและเพลงเบาๆ</option></select>
+        </label>
+        <label for="cCap">จำนวนคนสูงสุด
+          <select id="cCap"><option>4</option><option>6</option><option selected>8</option></select>
+        </label>
+        <button class="btn" type="submit">สร้างและเข้าห้อง</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- สตูดิโออวตาร -->
+  <section id="v-studio" hidden>
+    <div class="studiogrid">
+      <div class="stage" id="studioStage"></div>
+      <div class="panel">
+        <h2>อวตารของฉัน</h2>
+        <label for="pName">ชื่อที่แสดงในห้อง<input type="text" id="pName" maxlength="20"></label>
+        <div class="opt"><span>สีผิว</span><div class="sw" id="swSkin" role="radiogroup" aria-label="สีผิว"></div></div>
+        <div class="opt"><span>สีเสื้อ</span><div class="sw" id="swShirt" role="radiogroup" aria-label="สีเสื้อ"></div></div>
+        <div class="opt"><span>สีผม</span><div class="sw" id="swHair" role="radiogroup" aria-label="สีผม"></div></div>
+        <div class="opt"><span>หมวกและของตกแต่ง</span><div class="seg" id="segHat" role="radiogroup" aria-label="หมวก"></div></div>
+        <div class="opt"><span>แว่นตา</span><div class="seg" id="segGlasses" role="radiogroup" aria-label="แว่นตา"></div></div>
+        <p class="hint">ลากบนตัวละครเพื่อหมุนดู</p>
+        <button class="btn" id="saveAvatar">บันทึกอวตาร</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ห้อง -->
+  <section id="v-room" hidden>
+    <div class="roomhead">
+      <button class="btn ghost sm" id="leave">← ออกจากห้อง</button>
+      <div><h2 id="rName"></h2><p id="rDesc" class="muted"></p></div>
+      <button class="btn ghost sm" id="delRoom" style="margin-left:auto">ลบห้องนี้</button>
+    </div>
+    <div class="roomgrid">
+      <div>
+        <div class="stage" id="roomStage"></div>
+        <div class="bar">
+          <button class="btn" id="camBtn">เปิดกล้อง</button>
+          <button class="btn" id="micBtn">เปิดไมค์</button>
+          <button class="btn" id="deafBtn" aria-pressed="false">ปิดหูฟัง</button>
+          <button class="btn ghost" id="bgBtn" aria-expanded="false" aria-controls="bgPanel">พื้นหลัง</button>
+          <button class="btn ghost" id="sndBtn" aria-expanded="false" aria-controls="sndPanel">เสียงบรรยากาศ</button>
+          <div class="timer"><span>ตั้งเวลาโฟกัส</span><b id="tm">25:00</b>
+            <button class="btn ghost sm" data-tm="25">25 นาที</button>
+            <button class="btn ghost sm" data-tm="5">พัก 5</button>
+            <button class="btn ghost sm" data-tm="0">หยุด</button>
+          </div>
+        </div>
+        <div class="panel bgpanel" id="bgPanel" hidden>
+          <h3>พื้นหลังห้อง</h3>
+          <div class="bgchips" id="bgChips" role="radiogroup" aria-label="พื้นหลัง"></div>
+          <div class="row">
+            <button class="btn ghost sm" id="bgUp" type="button">อัปโหลดรูปพื้นหลัง</button>
+            <input type="file" id="bgFile" accept="image/*" hidden>
+            <button class="btn ghost sm" id="bgReset" type="button">กลับค่าเดิม</button>
+          </div>
+          <label for="bgDim">ความมืด<input type="range" id="bgDim" min="0" max="70" value="0"></label>
+          <label for="bgBlur">ความเบลอ<input type="range" id="bgBlur" min="0" max="14" value="0"></label>
+          <p class="hint">รูปพื้นหลังเก็บในเบราว์เซอร์ของคุณเท่านั้น คนอื่นยังไม่เห็น</p>
+        </div>
+        <div class="panel sndpanel" id="sndPanel" hidden>
+          <h3>เสียงบรรยากาศ</h3>
+          <div class="spresets" id="sndPresets"></div>
+          <label for="sndMaster">ระดับเสียงรวม<input type="range" id="sndMaster" min="0" max="100" value="60"></label>
+          <div id="sndList"></div>
+          <div class="row">
+            <button class="btn ghost sm" id="sndUp" type="button">อัปโหลดไฟล์เสียงของฉัน</button>
+            <input type="file" id="sndFile" accept="audio/*" hidden multiple>
+          </div>
+          <p class="hint">เปิดผสมกันได้หลายเสียง ปรับระดับแยกกันได้ เสียงนี้ได้ยินเฉพาะคุณและไม่ถูกส่งให้คนอื่น เสียงในรายการสร้างสดในเครื่อง ไม่ต้องดาวน์โหลด ไฟล์ที่อัปโหลดจะเล่นวนและอยู่จนกว่าจะปิดหน้านี้ ถ้าใช้ลำโพง แนะนำให้ใช้หูฟังเพื่อไม่ให้เสียงเล็ดลอดเข้าไมค์</p>
+        </div>
+      </div>
+      <aside class="side">
+        <div class="camtile">
+          <video id="cam" autoplay playsinline muted hidden></video>
+          <p id="camMsg">กล้องปิดอยู่ คนอื่นเห็นแค่อวตารของคุณ</p>
+        </div>
+        <div class="mic" id="micRow">
+          <span id="micState">ไมค์ปิดอยู่</span>
+          <div class="meter" aria-hidden="true"><i id="micLevel"></i></div>
+        </div>
+        <p class="hint" id="camHint">ภาพและเสียงส่งตรงถึงคนในห้องโดยไม่ผ่านเซิร์ฟเวอร์ ห้องเล็กจะลื่นที่สุด ปุ่มปิดหูฟังจะปิดเสียงของทุกคนและปิดไมค์ให้ด้วย</p>
+        <div id="remotesWrap" hidden><h3>กล้องของคนอื่น</h3><div id="remotes" class="remotes"></div></div>
+        <div id="audios" hidden></div>
+        <h3>คนในห้อง</h3>
+        <ul id="members"></ul>
+        <h3>แชตเบาๆ</h3>
+        <div class="chat" id="chat" aria-live="polite"></div>
+        <form id="chatForm" autocomplete="off">
+          <input type="text" id="chatIn" maxlength="200" placeholder="พิมพ์เบาๆ…" aria-label="ข้อความ">
+          <button class="btn sm" type="submit">ส่ง</button>
+        </form>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

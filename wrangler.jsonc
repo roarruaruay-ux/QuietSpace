@@ -1,0 +1,14 @@
+{
+  "name": "quietspace",
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": ["/ws", "/api/*"]
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "HUB", "class_name": "HubDO" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["HubDO"] }]
+}
